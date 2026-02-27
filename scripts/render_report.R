@@ -6,7 +6,6 @@ suppressPackageStartupMessages({
 
 rmarkdown::render(
   input = "report/breast_spacedeconv_analysis.Rmd",
-  knit_root_dir = normalizePath("."),
   output_file = "breast_spacedeconv_analysis.md",
   output_dir = "report"
 )

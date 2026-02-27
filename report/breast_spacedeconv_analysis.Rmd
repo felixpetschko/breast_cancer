@@ -10,7 +10,7 @@ library(spacedeconv)
 library(ggplot2)
 library(cowplot)
 
-dir.create("results/plots", recursive = TRUE, showWarnings = FALSE)
+dir.create("../results/plots", recursive = TRUE, showWarnings = FALSE)
 
 slides <- c("andersson", "1142243F", "1160920F", "4465", "44971", "4290", "4535")
 title_size <- 18
@@ -34,9 +34,9 @@ Normalization and deconvolution follow the spacedeconv paper scripts:
 for (slide in slides) {
   cat("\n### Slide ", slide, "\n\n", sep = "")
 
-  est <- readRDS(file.path("results/objects", paste0("deconv_estimate_", slide, ".rds")))
-  qua <- readRDS(file.path("results/objects", paste0("deconv_quantiseq_", slide, ".rds")))
-  epi <- readRDS(file.path("results/objects", paste0("deconv_epic_", slide, ".rds")))
+  est <- readRDS(file.path("../results/objects", paste0("deconv_estimate_", slide, ".rds")))
+  qua <- readRDS(file.path("../results/objects", paste0("deconv_quantiseq_", slide, ".rds")))
+  epi <- readRDS(file.path("../results/objects", paste0("deconv_epic_", slide, ".rds")))
 
   p_tumor <- plot_spatial(
     est,
@@ -76,7 +76,7 @@ for (slide in slides) {
   print(panel)
 
   ggsave(
-    filename = file.path("results/plots", paste0("slide_", slide, "_targets.png")),
+    filename = file.path("../results/plots", paste0("slide_", slide, "_targets.png")),
     plot = panel,
     width = 16,
     height = 5,
@@ -90,7 +90,7 @@ for (slide in slides) {
 ## Combined Table Preview
 
 ```{r combined-table, message=FALSE, warning=FALSE}
-tab <- read.csv("results/tables/targets_all_slides.csv")
+tab <- read.csv("../results/tables/targets_all_slides.csv")
 knitr::kable(head(tab, 20))
 ```
 
