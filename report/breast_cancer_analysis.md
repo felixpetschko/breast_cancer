@@ -14,6 +14,7 @@ legend_size <- 14
 ## Methods
 
 Normalization and deconvolution follow the spacedeconv paper scripts:
+Execution of these method calls is implemented in `scripts/run_spacedeconv.R`.
 
 - `preprocess(min_umi = 87)`
 - `spacedeconv::normalize(...)`
