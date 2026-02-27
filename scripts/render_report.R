@@ -10,6 +10,6 @@ on.exit(setwd(old_wd), add = TRUE)
 setwd("report")
 
 rmarkdown::render(
-  input = "breast_spacedeconv_analysis.Rmd",
-  output_file = "breast_spacedeconv_analysis.md"
+  input = "breast_cancer_analysis.Rmd",
+  output_file = "breast_cancer_analysis.md"
 )

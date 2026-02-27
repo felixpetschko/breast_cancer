@@ -31,4 +31,4 @@ scripts/render_report.R
 - Per-slide target tables: `results/tables/targets_<slide>.csv`
 - Combined table: `results/tables/targets_all_slides.csv`
 - Plot panels: `results/plots/slide_<slide>_targets.png`
-- Analysis markdown: `report/breast_spacedeconv_analysis.md`
+- Analysis markdown: `report/breast_cancer_analysis.md`

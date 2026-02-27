@@ -83,37 +83,37 @@ for (slide in slides) {
     ## 
     ## ### Slide andersson
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-1.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-1.png)<!-- -->
 
     ## 
     ## ### Slide 1142243F
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-2.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-2.png)<!-- -->
 
     ## 
     ## ### Slide 1160920F
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-3.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-3.png)<!-- -->
 
     ## 
     ## ### Slide 4465
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-4.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-4.png)<!-- -->
 
     ## 
     ## ### Slide 44971
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-5.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-5.png)<!-- -->
 
     ## 
     ## ### Slide 4290
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-6.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-6.png)<!-- -->
 
     ## 
     ## ### Slide 4535
 
-![](breast_spacedeconv_analysis_files/figure-gfm/per-slide-plots-7.png)<!-- -->
+![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-7.png)<!-- -->
 
 ## Combined Table Preview
 
