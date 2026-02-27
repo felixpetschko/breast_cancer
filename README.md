@@ -21,7 +21,7 @@ Required slide objects are stored in `data/`:
 ## Run
 
 ```bash
-scripts/run_breast_spacedeconv_methods.R
+scripts/run_spacedeconv.R
 scripts/render_report.R
 ```
 
