@@ -81,37 +81,65 @@ for (slide in slides) {
   rect_csv <- file.path("../results/objects", paste0("deconv_rectangle_", slide, ".csv"))
   if (file.exists(rect_csv)) {
     rect <- read.csv(rect_csv, stringsAsFactors = FALSE, check.names = FALSE)
-    rect_cols <- setdiff(colnames(rect), "spot_id")
+    req <- c(
+      "T cells CD8+",
+      "CAFs MSC iCAF-like",
+      "CAFs myCAF-like",
+      "Cancer Her2 SC",
+      "Cancer LumB SC",
+      "Cancer Basal SC",
+      "Cancer LumA SC",
+      "Unknown"
+    )
 
-    if (length(rect_cols) >= 2) {
-      colData(est)$rectangle_target_1 <- rect[[rect_cols[[1]]]][match(colnames(est), rect$spot_id)]
-      colData(est)$rectangle_target_2 <- rect[[rect_cols[[2]]]][match(colnames(est), rect$spot_id)]
+    if (all(req %in% colnames(rect))) {
+      rect_cd8 <- rect[["T cells CD8+"]]
+      rect_caf <- rect[["CAFs MSC iCAF-like"]] + rect[["CAFs myCAF-like"]]
+      rect_tumor <- rect[["Cancer Her2 SC"]] + rect[["Cancer LumB SC"]] +
+        rect[["Cancer Basal SC"]] + rect[["Cancer LumA SC"]] + rect[["Unknown"]]
 
-      p_rect_1 <- plot_spatial(
+      idx <- match(colnames(est), rect$spot_id)
+      colData(est)$rectangle_cd8 <- rect_cd8[idx]
+      colData(est)$rectangle_caf <- rect_caf[idx]
+      colData(est)$rectangle_tumor <- rect_tumor[idx]
+
+      p_rect_cd8 <- plot_spatial(
         est,
-        result = "rectangle_target_1",
+        result = "rectangle_cd8",
         smooth = TRUE,
         density = FALSE,
         shift_positive = FALSE,
-        title = paste0(slide, " - Rectangle: ", rect_cols[[1]]),
+        title = paste0(slide, " - Rectangle CD8"),
         title_size = title_size,
         font_size = font_size,
         legend_size = legend_size
       )
 
-      p_rect_2 <- plot_spatial(
+      p_rect_caf <- plot_spatial(
         est,
-        result = "rectangle_target_2",
+        result = "rectangle_caf",
         smooth = TRUE,
         density = FALSE,
         shift_positive = FALSE,
-        title = paste0(slide, " - Rectangle: ", rect_cols[[2]]),
+        title = paste0(slide, " - Rectangle CAF"),
         title_size = title_size,
         font_size = font_size,
         legend_size = legend_size
       )
 
-      panel <- cowplot::plot_grid(p_tumor, p_cd8, p_caf, p_rect_1, p_rect_2, ncol = 5, align = "hv")
+      p_rect_tumor <- plot_spatial(
+        est,
+        result = "rectangle_tumor",
+        smooth = TRUE,
+        density = FALSE,
+        shift_positive = FALSE,
+        title = paste0(slide, " - Rectangle Tumor"),
+        title_size = title_size,
+        font_size = font_size,
+        legend_size = legend_size
+      )
+
+      panel <- cowplot::plot_grid(p_tumor, p_cd8, p_caf, p_rect_tumor, p_rect_cd8, p_rect_caf, ncol = 3, align = "hv")
     } else {
       panel <- cowplot::plot_grid(p_tumor, p_cd8, p_caf, ncol = 3, align = "hv")
     }
@@ -124,8 +152,8 @@ for (slide in slides) {
   ggsave(
     filename = file.path("../results/plots", paste0("slide_", slide, "_targets.png")),
     plot = panel,
-    width = 20,
-    height = 5,
+    width = 16,
+    height = 10,
     units = "in",
     dpi = 300,
     bg = "white"

@@ -43,6 +43,12 @@ def parse_args() -> argparse.Namespace:
         help="Optional list of labels to keep after mapping",
     )
     parser.add_argument(
+        "--exclude-cell-types",
+        nargs="*",
+        default=None,
+        help="Optional list of labels to remove after mapping",
+    )
+    parser.add_argument(
         "--summary-json",
         default=None,
         help="Optional path for summary diagnostics JSON",
@@ -92,9 +98,16 @@ def main() -> None:
     adata.var_names = genes
     adata.var_names_make_unique()
 
+    n_cells_before_filter = int(adata.n_obs)
+
     if args.selected_cell_types:
         keep = set(args.selected_cell_types)
         mask = adata.obs[args.cell_type_col].isin(keep).values
+        adata = adata[mask].copy()
+
+    if args.exclude_cell_types:
+        drop = set(args.exclude_cell_types)
+        mask = ~adata.obs[args.cell_type_col].isin(drop).values
         adata = adata[mask].copy()
 
     out_path = Path(args.output_h5ad)
@@ -104,9 +117,12 @@ def main() -> None:
     summary = {
         "n_cells": int(adata.n_obs),
         "n_genes": int(adata.n_vars),
+        "n_cells_before_filter": n_cells_before_filter,
         "cell_type_col": args.cell_type_col,
         "n_cell_types": int(adata.obs[args.cell_type_col].nunique()),
         "cell_type_counts": adata.obs[args.cell_type_col].value_counts().to_dict(),
+        "selected_cell_types": args.selected_cell_types,
+        "exclude_cell_types": args.exclude_cell_types,
         "gene_symbol_policy": args.gene_symbol_policy,
     }
     if args.summary_json:

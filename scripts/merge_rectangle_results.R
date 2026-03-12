@@ -52,6 +52,32 @@ merge_one_slide <- function(slide) {
     merged[[col]] <- rect[[col]][row_idx]
   }
 
+  # Aggregate Rectangle outputs for downstream plotting/summary:
+  # CD8   = T cells CD8+
+  # CAF   = CAFs MSC iCAF-like + CAFs myCAF-like
+  # Tumor = Cancer Her2 SC + Cancer LumB SC + Cancer Basal SC + Cancer LumA SC + Unknown
+  req_cd8 <- "rectangle_T.cells.CD8."
+  req_caf <- c("rectangle_CAFs.MSC.iCAF.like", "rectangle_CAFs.myCAF.like")
+  req_tumor <- c(
+    "rectangle_Cancer.Her2.SC",
+    "rectangle_Cancer.LumB.SC",
+    "rectangle_Cancer.Basal.SC",
+    "rectangle_Cancer.LumA.SC",
+    "rectangle_Unknown"
+  )
+
+  if (req_cd8 %in% colnames(merged)) {
+    merged$rectangle_cd8 <- merged[[req_cd8]]
+  }
+
+  if (all(req_caf %in% colnames(merged))) {
+    merged$rectangle_caf <- rowSums(merged[, req_caf, drop = FALSE], na.rm = TRUE)
+  }
+
+  if (all(req_tumor %in% colnames(merged))) {
+    merged$rectangle_tumor <- rowSums(merged[, req_tumor, drop = FALSE], na.rm = TRUE)
+  }
+
   if (!("slide_id" %in% colnames(merged))) {
     merged$slide_id <- slide
   }

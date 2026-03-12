@@ -19,6 +19,15 @@ Required slide objects are stored in `data/`:
 - `allresults_minor_4290.rds`
 - `allresults_minor_4535.rds`
 
+Reference layout:
+
+- Active raw reference files for Wu in `data/reference/`:
+  - `count_matrix_sparse.mtx`
+  - `count_matrix_genes.tsv`
+  - `count_matrix_barcodes.tsv`
+  - `metadata.csv`
+- Previous reference assets are kept in `data/reference_old/`.
+
 ## Run
 
 ```bash
@@ -80,13 +89,22 @@ Logs are written to `logs/slurm/%x_%j.out` and `logs/slurm/%x_%j.err`.
 conda env create -f environment/rectangle.yml
 conda activate breast-cancer-rectangle-env
 ```
-2. Ensure the Wu reference file exists at:
-`data/reference/wu_breast_atlas_rectangle.h5ad`
+2. Keep the 4 Wu raw files in `data/reference/`:
 
-This repo already contains scripts to create it from GEO files:
+```bash
+ls data/reference
+# count_matrix_sparse.mtx  count_matrix_genes.tsv  count_matrix_barcodes.tsv  metadata.csv
+```
+
+3. The pipeline auto-builds these generated files if missing:
+- `data/reference/wu_raw.h5ad`
+- `data/reference/wu_breast_atlas_rectangle.h5ad`
+
+Manual build remains possible:
+
 ```bash
 python3 scripts/convert_wu_matrix_to_h5ad.py \
-  --input-dir data/reference/Wu_etal_2021_BRCA_scRNASeq \
+  --input-dir data/reference \
   --output-h5ad data/reference/wu_raw.h5ad
 
 python3 scripts/prepare_wu_reference.py \
@@ -95,7 +113,8 @@ python3 scripts/prepare_wu_reference.py \
   --cell-type-col celltype_minor \
   --summary-json results/objects/wu_reference_summary.json
 ```
-3. Verify `config/rectangle.yaml` (reference path + label column).
+4. Verify `config/rectangle.yaml` (reference path + label column).
+   The `excluded_cell_types` list in that config is applied during reference preparation.
 
 ## Outputs
 
@@ -106,3 +125,9 @@ python3 scripts/prepare_wu_reference.py \
 - Analysis markdown: `report/breast_cancer_analysis.md`
 - Rectangle intermediates: `results/intermediate/rectangle/`
 - Rectangle diagnostics: `results/objects/deconv_rectangle_<slide>_diagnostics.json`
+
+Rectangle downstream aggregates used for plotting/tables:
+
+- `rectangle_cd8 = T cells CD8+`
+- `rectangle_caf = CAFs MSC iCAF-like + CAFs myCAF-like`
+- `rectangle_tumor = Cancer Her2 SC + Cancer LumB SC + Cancer Basal SC + Cancer LumA SC + Unknown`

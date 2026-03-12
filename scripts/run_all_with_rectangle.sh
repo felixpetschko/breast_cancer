@@ -14,6 +14,9 @@ GENE_SYMBOL_POLICY="${GENE_SYMBOL_POLICY:-upper}"
 CORRECT_MRNA_BIAS="${CORRECT_MRNA_BIAS:-true}"
 MIN_GENES_OVERLAP="${MIN_GENES_OVERLAP:-500}"
 N_CPUS="${N_CPUS:-}"
+RAW_H5AD_PATH="${RAW_H5AD_PATH:-data/reference/wu_raw.h5ad}"
+REFERENCE_INPUT_DIR="${REFERENCE_INPUT_DIR:-data/reference}"
+EXCLUDED_CELL_TYPES=()
 
 usage() {
   cat <<USAGE
@@ -88,6 +91,11 @@ read_cfg_value() {
   run_python_quiet -c 'import sys,yaml; from pathlib import Path; p=Path(sys.argv[1]); key=sys.argv[2]; cfg=yaml.safe_load(p.read_text()) if p.exists() else {}; print((cfg or {}).get(key,""))' "${CONFIG_PATH}" "${key}"
 }
 
+read_cfg_list() {
+  local key="$1"
+  run_python_quiet -c 'import sys,yaml; from pathlib import Path; p=Path(sys.argv[1]); key=sys.argv[2]; cfg=yaml.safe_load(p.read_text()) if p.exists() else {}; vals=(cfg or {}).get(key, []); vals = vals if isinstance(vals, list) else []; [print(v) for v in vals]' "${CONFIG_PATH}" "${key}"
+}
+
 have_baseline_outputs() {
   [[ -f "results/objects/deconv_estimate_andersson.rds" && -f "results/tables/targets_andersson.csv" ]]
 }
@@ -108,6 +116,49 @@ resolve_rectangle_config() {
     echo "Rectangle reference path is empty. Set config/rectangle.yaml reference_path or REFERENCE_H5AD env."
     exit 1
   fi
+
+  mapfile -t EXCLUDED_CELL_TYPES < <(read_cfg_list excluded_cell_types || true)
+}
+
+ensure_reference_ready() {
+  if [[ -f "${REFERENCE_H5AD}" ]]; then
+    echo "[Rectangle] Reference already available: ${REFERENCE_H5AD}"
+    return
+  fi
+
+  required_files=(
+    "${REFERENCE_INPUT_DIR}/count_matrix_sparse.mtx"
+    "${REFERENCE_INPUT_DIR}/count_matrix_genes.tsv"
+    "${REFERENCE_INPUT_DIR}/count_matrix_barcodes.tsv"
+    "${REFERENCE_INPUT_DIR}/metadata.csv"
+  )
+  for f in "${required_files[@]}"; do
+    if [[ ! -f "${f}" ]]; then
+      echo "Missing raw reference file: ${f}"
+      echo "Expected 4 files in ${REFERENCE_INPUT_DIR} to build h5ad reference."
+      exit 1
+    fi
+  done
+
+  echo "[Rectangle] Building raw Wu h5ad from matrix files"
+  run_python scripts/convert_wu_matrix_to_h5ad.py \
+    --input-dir "${REFERENCE_INPUT_DIR}" \
+    --output-h5ad "${RAW_H5AD_PATH}"
+
+  echo "[Rectangle] Preparing Rectangle-ready reference"
+  prep_args=(
+    --input-h5ad "${RAW_H5AD_PATH}"
+    --output-h5ad "${REFERENCE_H5AD}"
+    --cell-type-col "${CELL_TYPE_COL}"
+    --gene-symbol-policy "${GENE_SYMBOL_POLICY}"
+    --summary-json results/objects/wu_reference_summary.json
+  )
+  if [[ ${#EXCLUDED_CELL_TYPES[@]} -gt 0 ]]; then
+    prep_args+=(--exclude-cell-types "${EXCLUDED_CELL_TYPES[@]}")
+  fi
+
+  run_python scripts/prepare_wu_reference.py \
+    "${prep_args[@]}"
 }
 
 run_baseline() {
@@ -168,6 +219,7 @@ echo "Mode: ${MODE}"
 case "${MODE}" in
   all)
     resolve_rectangle_config
+    ensure_reference_ready
     run_baseline
     run_rectangle_stage
     echo "[Post] Merging Rectangle output into target tables"
@@ -182,6 +234,7 @@ case "${MODE}" in
     ;;
   rectangle)
     resolve_rectangle_config
+    ensure_reference_ready
     run_rectangle_stage
     run_merge_and_report_if_possible
     ;;
