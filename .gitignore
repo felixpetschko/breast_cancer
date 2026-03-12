@@ -12,3 +12,6 @@ data/reference/wu_breast_atlas_rectangle.h5ad
 
 # Large Rectangle intermediates
 results/intermediate/
+
+# SLURM logs
+logs/slurm/
