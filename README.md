@@ -1,4 +1,4 @@
-# breast_cancer
+# Breast Cancer Architecture
 
 This repository runs a breast-cancer spatial deconvolution analysis for the 7 slides used in the spacedeconv paper (Fig 2 + Suppl Fig 2), focused on:
 

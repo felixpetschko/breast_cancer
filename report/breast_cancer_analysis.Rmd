@@ -1,5 +1,5 @@
 ---
-title: "Breast Cancer Spacedeconv Analysis (7 Slides)"
+title: "Breast Cancer Architecture Analysis (7 Slides)"
 output:
   md_document:
     variant: gfm
