@@ -133,7 +133,51 @@ for (slide in slides) {
         legend_size = legend_size
       )
 
-      panel <- cowplot::plot_grid(p_tumor, p_cd8, p_caf, p_rect_tumor, p_rect_cd8, p_rect_caf, ncol = 3, align = "hv")
+      first_tumor <- SummarizedExperiment::colData(est)$estimate_tumor.purity
+      first_cd8 <- SummarizedExperiment::colData(qua)$quantiseq_T.cell.CD8.
+      first_caf <- SummarizedExperiment::colData(epi)$epic_Cancer.associated.fibroblast
+
+      mk_scatter <- function(x, y, title, xlab, ylab) {
+        d <- data.frame(x = as.numeric(x), y = as.numeric(y))
+        d <- d[stats::complete.cases(d), , drop = FALSE]
+        r <- if (nrow(d) > 1) stats::cor(d$x, d$y, method = "pearson") else NA_real_
+        ggplot(d, aes(x = x, y = y)) +
+          geom_point(size = 0.5, alpha = 0.35) +
+          geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+          labs(
+            title = title,
+            subtitle = paste0("Pearson r = ", ifelse(is.na(r), "NA", sprintf("%.3f", r))),
+            x = xlab,
+            y = ylab
+          ) +
+          theme_bw(base_size = 11)
+      }
+
+      p_sc_tumor <- mk_scatter(
+        first_tumor, rect_tumor[idx],
+        paste0(slide, " - Tumor: 1st-gen vs Rectangle"),
+        "1st-gen Tumor (ESTIMATE)",
+        "2nd-gen Tumor (Rectangle)"
+      )
+      p_sc_cd8 <- mk_scatter(
+        first_cd8, rect_cd8[idx],
+        paste0(slide, " - CD8: 1st-gen vs Rectangle"),
+        "1st-gen CD8 (quanTIseq)",
+        "2nd-gen CD8 (Rectangle)"
+      )
+      p_sc_caf <- mk_scatter(
+        first_caf, rect_caf[idx],
+        paste0(slide, " - CAF: 1st-gen vs Rectangle"),
+        "1st-gen CAF (EPIC)",
+        "2nd-gen CAF (Rectangle)"
+      )
+
+      panel <- cowplot::plot_grid(
+        p_tumor, p_cd8, p_caf,
+        p_rect_tumor, p_rect_cd8, p_rect_caf,
+        p_sc_tumor, p_sc_cd8, p_sc_caf,
+        ncol = 3, align = "hv"
+      )
     } else {
       panel <- cowplot::plot_grid(p_tumor, p_cd8, p_caf, ncol = 3, align = "hv")
     }
@@ -147,7 +191,7 @@ for (slide in slides) {
     filename = file.path("../results/plots", paste0("slide_", slide, "_targets.png")),
     plot = panel,
     width = 16,
-    height = 10,
+    height = 14,
     units = "in",
     dpi = 300,
     bg = "white"
@@ -155,36 +199,24 @@ for (slide in slides) {
 }
 ```
 
-    ## 
-    ## ### Slide andersson
+### Slide andersson
 
-    ## 
-    ## ### Slide 1142243F
+### Slide 1142243F
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-1.png)<!-- -->
-
-    ## 
-    ## ### Slide 1160920F
+\### Slide 1160920F
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-2.png)<!-- -->
-
-    ## 
-    ## ### Slide 4465
+\### Slide 4465
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-3.png)<!-- -->
-
-    ## 
-    ## ### Slide 44971
+\### Slide 44971
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-4.png)<!-- -->
-
-    ## 
-    ## ### Slide 4290
+\### Slide 4290
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-5.png)<!-- -->
-
-    ## 
-    ## ### Slide 4535
+\### Slide 4535
 
 ![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-6.png)<!-- -->![](breast_cancer_analysis_files/figure-gfm/per-slide-plots-7.png)<!-- -->
 
