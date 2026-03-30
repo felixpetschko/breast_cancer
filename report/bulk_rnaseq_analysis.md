@@ -97,6 +97,7 @@ mk_scatter <- function(df, x, y, title, xlab, ylab, out_png) {
 
 comparisons <- data.frame(
   metric = c("Tumor", "CD8", "CAF", "B cells"),
+  method = c("ESTIMATE", "quanTIseq", "EPIC", "EPIC"),
   x = c("estimate_tumor", "quantiseq_cd8", "epic_caf", "epic_bcells"),
   y = c("rectangle_tumor", "rectangle_cd8", "rectangle_caf", "rectangle_bcells"),
   stringsAsFactors = FALSE
@@ -108,7 +109,7 @@ for (i in seq_len(nrow(comparisons))) {
   png_path <- file.path("../results/bulk_rnaseq/plots", paste0("tcga_brca_", make.names(row$metric), "_scatter.png"))
   cors[[i]] <- mk_scatter(
     tab, row$x, row$y,
-    paste0("TCGA-BRCA ", row$metric, ": 1st-gen vs Rectangle"),
+    paste0("TCGA-BRCA ", row$metric, ": ", row$method, " vs Rectangle"),
     paste0("1st-gen ", row$metric),
     paste0("Rectangle ", row$metric),
     png_path
@@ -120,15 +121,15 @@ for (i in seq_len(nrow(comparisons))) {
 
 ``` r
 comparisons$pearson_r <- cors
-kable(comparisons[, c("metric", "x", "y", "pearson_r")])
+kable(comparisons[, c("metric", "method", "x", "y", "pearson_r")])
 ```
 
-| metric  | x              | y                | pearson_r |
-|:--------|:---------------|:-----------------|----------:|
-| Tumor   | estimate_tumor | rectangle_tumor  | 0.8121907 |
-| CD8     | quantiseq_cd8  | rectangle_cd8    | 0.8738960 |
-| CAF     | epic_caf       | rectangle_caf    | 0.6694251 |
-| B cells | epic_bcells    | rectangle_bcells | 0.6693490 |
+| metric  | method    | x              | y                | pearson_r |
+|:--------|:----------|:---------------|:-----------------|----------:|
+| Tumor   | ESTIMATE  | estimate_tumor | rectangle_tumor  | 0.8121907 |
+| CD8     | quanTIseq | quantiseq_cd8  | rectangle_cd8    | 0.8738960 |
+| CAF     | EPIC      | epic_caf       | rectangle_caf    | 0.6694251 |
+| B cells | EPIC      | epic_bcells    | rectangle_bcells | 0.6693490 |
 
 ## Session Info
 
