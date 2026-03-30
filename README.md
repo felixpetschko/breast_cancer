@@ -34,6 +34,15 @@ Data layout:
   - `clinical.tsv`
   - `tcga_survival_curated_2018.csv`
 
+Source links:
+
+- Spatial slide inputs:
+  - https://github.com/ComputationalBiomedicineGroup/spacedeconv_paper/tree/main/data
+- Wu scRNA-seq reference files:
+  - https://drive.google.com/drive/folders/1WJpUG134anGH1dq12n_f0gt5Kz8vKA37?usp=sharing
+- TCGA-BRCA bulk RNA-seq dataset:
+  - https://drive.google.com/file/d/1kBY2jAqpKjk6Ptmqq8FUAOGdtBDzQfhN/view
+
 ## Run
 
 ```bash
