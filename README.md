@@ -110,6 +110,12 @@ conda env create -f environment/rectangle.yml
 conda activate breast-cancer-rectangle-env
 ```
 
+The `immunedeconv` R environment can be created like this:
+
+```bash
+conda create -n immunedeconv-env -c conda-forge -c bioconda r-base=4.3.3 r-immunedeconv
+```
+
 ## Rectangle Setup
 
 1. Activate the Rectangle Python environment:
