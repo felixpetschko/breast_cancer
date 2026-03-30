@@ -97,6 +97,14 @@ scripts/submit_slurm.sh \
 
 Logs are written to `logs/slurm/%x_%j.out` and `logs/slurm/%x_%j.err`.
 
+## Environments
+
+The R environment `spacedeconv-env` can be created based on the `environment.yml` from the upstream spacedeconv repository:
+
+- https://github.com/omnideconv/spacedeconv
+
+The Rectangle Python environment used here is `breast-cancer-rectangle-env`.
+
 ## Rectangle Setup
 
 1. Create/activate Rectangle Python environment:
