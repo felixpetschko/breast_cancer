@@ -10,6 +10,8 @@ ACCOUNT=""
 PARTITION=""
 QOS=""
 N_CPUS=""
+MAIL_USER=""
+MAIL_TYPE=""
 DRY_RUN="false"
 TEST_PARTITION="false"
 
@@ -31,6 +33,8 @@ Options:
   --partition <name>                  SLURM partition (optional)
   --qos <name>                        SLURM qos (optional)
   --n-cpus <int>                      Rectangle worker CPUs inside job (optional)
+  --mail-user <email>                 SLURM mail recipient (optional)
+  --mail-type <types>                 SLURM mail types, e.g. END,FAIL (optional)
   --test                              Use test partition (-p test) and max 10:00:00 walltime
   --dry-run                           Print sbatch command only
   -h, --help                          Show this help
@@ -53,6 +57,8 @@ while [[ $# -gt 0 ]]; do
     --partition) PARTITION="$2"; shift 2 ;;
     --qos) QOS="$2"; shift 2 ;;
     --n-cpus) N_CPUS="$2"; shift 2 ;;
+    --mail-user) MAIL_USER="$2"; shift 2 ;;
+    --mail-type) MAIL_TYPE="$2"; shift 2 ;;
     --test) TEST_PARTITION="true"; shift ;;
     --dry-run) DRY_RUN="true"; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -124,6 +130,8 @@ cmd=(
 [[ -n "${ACCOUNT}" ]] && cmd+=(--account "${ACCOUNT}")
 [[ -n "${PARTITION}" ]] && cmd+=(--partition "${PARTITION}")
 [[ -n "${QOS}" ]] && cmd+=(--qos "${QOS}")
+[[ -n "${MAIL_USER}" ]] && cmd+=(--mail-user "${MAIL_USER}")
+[[ -n "${MAIL_TYPE}" ]] && cmd+=(--mail-type "${MAIL_TYPE}")
 
 cmd+=(scripts/run_pipeline.slurm)
 
