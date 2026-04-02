@@ -40,6 +40,11 @@ Source links:
 
 - Spatial slide inputs:
   - https://github.com/ComputationalBiomedicineGroup/spacedeconv_paper/tree/main/data
+- Spatial slides original data:
+  - `allresults_minor_andersson.rds` is a derivative of the 10x Genomics Breast Cancer Block A Section 1 dataset:
+    - https://www.10xgenomics.com/datasets/human-breast-cancer-block-a-section-1-1-standard-1-0-0
+  - `allresults_minor_1142243F.rds`, `allresults_minor_1160920F.rds`, `allresults_minor_4290.rds`, `allresults_minor_4465.rds`, `allresults_minor_44971.rds`, and `allresults_minor_4535.rds` are derivatives of the Wu spatial breast cancer dataset:
+    - https://zenodo.org/records/4739739
 - Wu scRNA-seq reference files:
   - https://drive.google.com/drive/folders/1WJpUG134anGH1dq12n_f0gt5Kz8vKA37?usp=sharing
 - TCGA-BRCA bulk RNA-seq dataset:
