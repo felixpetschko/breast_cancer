@@ -19,3 +19,5 @@ results/intermediate/
 
 # SLURM logs
 logs/slurm/
+
+data/export/
